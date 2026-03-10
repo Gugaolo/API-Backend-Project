@@ -1,0 +1,9 @@
+$kind: collection
+name: API Backend
+description: JWT Authentication API with REST Countries integration
+variables:
+  - key: baseUrl
+    value: 'http://localhost:3000'
+  - key: token
+    value: ''
+    description: JWT token captured from login/register responses

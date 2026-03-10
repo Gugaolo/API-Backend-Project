@@ -1,0 +1,33 @@
+$kind: http-request
+name: Profile
+method: GET
+url: '{{baseUrl}}/api/profile'
+order: 3000
+headers:
+  - key: Authorization
+    value: 'Bearer {{token}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 200", function () {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Response contains user profile data", function () {
+          const jsonData = pm.response.json();
+          pm.expect(jsonData).to.have.property('id');
+          pm.expect(jsonData).to.have.property('username');
+          pm.expect(jsonData).to.have.property('email');
+          pm.expect(jsonData).to.have.property('createdAt');
+      });
+
+      pm.test("Username is a non-empty string", function () {
+          const jsonData = pm.response.json();
+          pm.expect(jsonData.username).to.be.a('string').and.not.empty;
+      });
+
+      pm.test("Email is a valid format", function () {
+          const jsonData = pm.response.json();
+          pm.expect(jsonData.email).to.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+      });
