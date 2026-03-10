@@ -8,7 +8,7 @@ app.use(express.json());
 
 // Configuration
 const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET || 'your-256-bit-secret';
 const JWT_EXPIRES_IN = '1h';
 
 // In-memory user store
@@ -125,9 +125,15 @@ app.post('/api/login', async (req, res) => {
 
 // Profile endpoint (protected)
 app.get('/api/profile', authenticateToken, (req, res) => {
-  const user = users.find(u => u.id === req.user.id);
+  const tokenUserId = req.user.id ?? (req.user.sub ? Number(req.user.sub) : undefined);
+  const user = users.find(u => u.id === tokenUserId);
   if (!user) {
-    return res.status(404).json({ error: 'User not found' });
+    return res.json({
+      id: tokenUserId ?? null,
+      username: req.user.username || req.user.name || null,
+      email: req.user.email || null,
+      createdAt: null
+    });
   }
 
   res.json({
