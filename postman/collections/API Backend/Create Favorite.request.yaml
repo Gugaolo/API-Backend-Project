@@ -1,0 +1,19 @@
+$kind: http-request
+name: Create Favorite
+method: POST
+url: '{{baseUrl}}/api/favorites'
+order: 5000
+headers:
+  - key: Authorization
+    value: 'Bearer {{token}}'
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "city": "Ljubljana",
+      "country": "Slovenia",
+      "latitude": 46.0569,
+      "longitude": 14.5058
+    }

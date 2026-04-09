@@ -4,7 +4,11 @@ values:
     value: 'http://localhost:3000'
     enabled: true
     type: default
-  - key: jwtSecret
-    value: 'your-secret-key-change-in-production'
+  - key: token
+    value: ''
     enabled: true
-    type: secret
+    type: default
+  - key: favoriteId
+    value: ''
+    enabled: true
+    type: default

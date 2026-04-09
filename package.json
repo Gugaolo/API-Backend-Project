@@ -1,16 +1,18 @@
 {
   "name": "api-backend-project",
   "version": "1.0.0",
-  "description": "Node.js + Express backend with JWT auth and REST Countries API integration",
-  "main": "src/index.js",
+  "private": true,
+  "description": "Next.js App Router weather API with JWT auth and protected favorites CRUD",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "node --watch src/index.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.2",
     "bcryptjs": "^2.4.3",
-    "axios": "^1.6.2"
+    "jsonwebtoken": "^9.0.3",
+    "next": "^15.3.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   }
 }

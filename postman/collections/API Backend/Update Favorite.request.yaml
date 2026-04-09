@@ -1,0 +1,19 @@
+$kind: http-request
+name: Update Favorite
+method: PUT
+url: '{{baseUrl}}/api/favorites/{{favoriteId}}'
+order: 6000
+headers:
+  - key: Authorization
+    value: 'Bearer {{token}}'
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "city": "London",
+      "country": "United Kingdom",
+      "latitude": 51.5072,
+      "longitude": -0.1276
+    }

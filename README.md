@@ -1,58 +1,144 @@
-# API Backend Project
+# Weather Favorites API
 
-Node.js + Express backend with JWT authentication and REST Countries API integration.
+Minimal Next.js App Router project in JavaScript with JWT authentication, Open-Meteo weather lookup, and protected in-memory favorites CRUD.
 
-## Setup
+## Stack
+
+- Next.js
+- App Router route handlers
+- JavaScript only
+- bcryptjs
+- jsonwebtoken
+- Open-Meteo APIs via `fetch`
+
+## Run the app
 
 1. Install dependencies:
-   ```bash
-   npm install
-   ```
 
-2. Start the server:
-   ```bash
-   npm start
-   ```
+```bash
+npm install
+```
 
-The server will run on `http://localhost:3000`.
+2. Create environment file:
 
-## API Endpoints
+```bash
+copy .env.local.example .env.local
+```
+
+3. Set a JWT secret in `.env.local`:
+
+```env
+JWT_SECRET=replace-this-with-a-long-random-secret
+```
+
+4. Start development server:
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:3000`.
+
+## API endpoints
 
 ### Authentication
 
-- **POST /api/register** - Register a new user
-  - Body: `{ "username": "string", "email": "string", "password": "string" }`
-  - Returns: JWT token and user data
+- `POST /api/auth/register`
+- `POST /api/auth/login`
 
-- **POST /api/login** - Login with existing credentials
-  - Body: `{ "email": "string", "password": "string" }`
-  - Returns: JWT token and user data
+### Weather
 
-### Protected Endpoints (require Bearer token)
+- `GET /api/weather?city=Ljubljana`
 
-- **GET /api/profile** - Get current user's profile
-  - Header: `Authorization: Bearer <token>`
+### Protected favorites
 
-- **GET /api/countries?name={name}** - Search countries by name
-  - Header: `Authorization: Bearer <token>`
-  - Query: `name` - Country name to search for
-  - Returns: Simplified country data from REST Countries API
+- `GET /api/favorites`
+- `POST /api/favorites`
+- `PUT /api/favorites/:id`
+- `DELETE /api/favorites/:id`
 
-### Health Check
+Protected routes require:
 
-- **GET /health** - Server health status
+```http
+Authorization: Bearer <token>
+```
 
-## Postman Collection
+## Postman testing
 
-The Postman collection is located in `postman/collections/API Backend/` with the following requests:
-- Register
-- Login
-- Profile
-- Countries Search
+### 1. Register
 
-Each request includes tests that validate responses and automatically capture the JWT token for reuse.
+`POST http://localhost:3000/api/auth/register`
 
-## Environment Variables
+```json
+{
+  "username": "test",
+  "password": "123456"
+}
+```
 
-- `PORT` - Server port (default: 3000)
-- `JWT_SECRET` - Secret key for JWT signing (default: 'your-secret-key-change-in-production')
+### 2. Login
+
+`POST http://localhost:3000/api/auth/login`
+
+```json
+{
+  "username": "test",
+  "password": "123456"
+}
+```
+
+Copy `data.token` from the response.
+
+### 3. Weather lookup
+
+`GET http://localhost:3000/api/weather?city=Ljubljana`
+
+### 4. Create favorite
+
+`POST http://localhost:3000/api/favorites`
+
+Headers:
+
+```http
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+Body:
+
+```json
+{
+  "city": "Ljubljana",
+  "country": "Slovenia",
+  "latitude": 46.0569,
+  "longitude": 14.5058
+}
+```
+
+### 5. List favorites
+
+`GET http://localhost:3000/api/favorites`
+
+### 6. Update favorite
+
+`PUT http://localhost:3000/api/favorites/<id>`
+
+```json
+{
+  "city": "London",
+  "country": "United Kingdom",
+  "latitude": 51.5072,
+  "longitude": -0.1276
+}
+```
+
+### 7. Delete favorite
+
+`DELETE http://localhost:3000/api/favorites/<id>`
+
+## Notes
+
+- Data is stored in memory only and resets when the server restarts.
+- Favorites are scoped to the authenticated user.
+- Missing or invalid Bearer token returns `401`.
+- Unknown city returns `404`.

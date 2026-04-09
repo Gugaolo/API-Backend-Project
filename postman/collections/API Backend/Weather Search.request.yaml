@@ -1,0 +1,8 @@
+$kind: http-request
+name: Weather Search
+method: GET
+url: '{{baseUrl}}/api/weather'
+order: 3000
+queryParams:
+  - key: city
+    value: Ljubljana
